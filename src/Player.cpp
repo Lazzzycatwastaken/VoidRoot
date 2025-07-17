@@ -66,13 +66,3 @@ int Player::getHealth() const {
 int Player::getXP() const {
     return xp;
 }
-
-void Player::displayStatus() const {
-    std::cout << "\n=== PLAYER STATUS ===\n";
-    std::cout << "Name   : " << name << '\n';
-    std::cout << "Class  : " << characterClass << '\n';
-    std::cout << "Level  : " << level << '\n';
-    std::cout << "XP     : " << xp << " / " << xpToLevelUp << '\n';
-    std::cout << "Health : " << health << " / 100\n";
-    std::cout << "======================\n";
-}

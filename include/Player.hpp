@@ -32,7 +32,6 @@ public:
     int getHealth() const;
     int getXP() const;
 
-    void displayStatus() const;
 };
 
 #endif // PLAYER_HPP

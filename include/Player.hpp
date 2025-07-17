@@ -1,38 +1,42 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#include "Game.hpp"
+#include <iostream>
 
-#include <string>
+void printMainMenu() {
+    std::cout << "\n== TERMINAL RPG ==\n";
+    std::cout << "1. Start New Game\n";
+    std::cout << "2. Load Game\n";
+    std::cout << "3. Exit\n";
+    std::cout << "Choose an option: ";
+}
 
-class Player {
-public:
-    Player(const std::string& name);
+int main() {
+    int choice;
 
-    void takeDamage(int amount);
-    void heal(int amount);
-    void gainXP(int amount);
-    void levelUp();
+    while (true) {
+        printMainMenu();
+        std::cin >> choice;
+        std::cin.ignore(); // Flush newline
 
-    void setClass(const std::string& newClass);
-    void setHealth(int hp);
-    void setLevel(int lvl);
-    void setXP(int newXP);
+        switch (choice) {
+            case 1: {
+                Game game;
+                game.startNewGame();
+                break;
+            }
+            case 2: {
+                Game game;
+                if (game.loadGame()) {
+                    game.play();
+                }
+                break;
+            }
+            case 3:
+                std::cout << "Exiting...\n";
+                return 0;
+            default:
+                std::cout << "Invalid choice.\n";
+        }
+    }
 
-    std::string getName() const;
-    std::string getClass() const;
-    int getLevel() const;
-    int getHealth() const;
-    int getXP() const;
-
-    void displayStatus() const;
-
-private:
-    std::string name;
-    std::string characterClass;
-    std::string currentLocation;
-    int health;
-    int level;
-    int xp;
-    int xpToLevelUp;
-};
-
-#endif
+    return 0;
+}

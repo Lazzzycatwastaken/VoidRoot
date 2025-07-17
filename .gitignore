@@ -22,8 +22,5 @@ saves/
 .DS_Store
 Thumbs.db
 
-# Vs code slop
-.vscode/
-
 # Ignore logs
 *.log

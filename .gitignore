@@ -1,0 +1,29 @@
+# Ignore save files directory
+saves/
+
+# Ignore build output
+/build/
+/bin/
+/obj/
+
+# Ignore compiled object files
+*.o
+*.obj
+
+# Ignore executable files
+*.exe
+*.out
+*.app
+
+# Ignore IDE/editor settings (example for VSCode)
+.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Vs code slop
+.vscode/
+
+# Ignore logs
+*.log

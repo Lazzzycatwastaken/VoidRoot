@@ -1,9 +1,23 @@
 #include "SaveSystem.hpp"
 #include <fstream>
 #include <iostream>
+#include <filesystem>  // C++17 feature
+
+namespace fs = std::filesystem;
+
+void ensureSavesDirectoryExists() {
+    const fs::path saveDir("saves");
+    if (!fs::exists(saveDir)) {
+        if (!fs::create_directory(saveDir)) {
+            std::cerr << "Error: Could not create saves directory.\n";
+        }
+    }
+}
 
 void SaveSystem::savePlayer(const Player& player) {
-    std::ofstream file("save_player.txt");
+    ensureSavesDirectoryExists();
+
+    std::ofstream file("saves/save_player.txt");
     if (!file) {
         std::cerr << "Error saving player data.\n";
         return;
@@ -19,7 +33,7 @@ void SaveSystem::savePlayer(const Player& player) {
 }
 
 Player* SaveSystem::loadPlayer() {
-    std::ifstream file("save_player.txt");
+    std::ifstream file("saves/save_player.txt");
     if (!file) {
         std::cout << "No player save file found.\n";
         return nullptr;
@@ -44,7 +58,9 @@ Player* SaveSystem::loadPlayer() {
 }
 
 void SaveSystem::saveInventory(const Inventory& inventory) {
-    std::ofstream file("save_inventory.txt");
+    ensureSavesDirectoryExists();
+
+    std::ofstream file("saves/save_inventory.txt");
     if (!file) {
         std::cerr << "Error saving inventory data.\n";
         return;
@@ -56,10 +72,10 @@ void SaveSystem::saveInventory(const Inventory& inventory) {
 }
 
 Inventory* SaveSystem::loadInventory() {
-    std::ifstream file("save_inventory.txt");
+    std::ifstream file("saves/save_inventory.txt");
     if (!file) {
         std::cout << "No inventory save file found.\n";
-        return new Inventory();  // return empty inventory
+        return new Inventory();
     }
 
     Inventory* inventory = new Inventory();
@@ -71,7 +87,9 @@ Inventory* SaveSystem::loadInventory() {
 }
 
 void SaveSystem::saveLocation(const std::string& location) {
-    std::ofstream file("save_location.txt");
+    ensureSavesDirectoryExists();
+
+    std::ofstream file("saves/save_location.txt");
     if (!file) {
         std::cerr << "Error saving location data.\n";
         return;
@@ -81,7 +99,7 @@ void SaveSystem::saveLocation(const std::string& location) {
 }
 
 std::string SaveSystem::loadLocation() {
-    std::ifstream file("save_location.txt");
+    std::ifstream file("saves/save_location.txt");
     if (!file) {
         std::cout << "No location save file found.\n";
         return "Unknown";
@@ -93,7 +111,9 @@ std::string SaveSystem::loadLocation() {
 }
 
 void SaveSystem::saveVisitedLocations(const std::vector<std::string>& locations) {
-    std::ofstream outFile("visited_locations.txt");
+    ensureSavesDirectoryExists();
+
+    std::ofstream outFile("saves/visited_locations.txt");
     if (!outFile) {
         std::cerr << "Error saving visited locations.\n";
         return;
@@ -105,7 +125,7 @@ void SaveSystem::saveVisitedLocations(const std::vector<std::string>& locations)
 
 std::vector<std::string> SaveSystem::loadVisitedLocations() {
     std::vector<std::string> locations;
-    std::ifstream inFile("visited_locations.txt");
+    std::ifstream inFile("saves/visited_locations.txt");
     if (!inFile) {
         // No visited locations saved yet, return empty vector
         return locations;
@@ -118,4 +138,3 @@ std::vector<std::string> SaveSystem::loadVisitedLocations() {
     }
     return locations;
 }
-

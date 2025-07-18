@@ -3,7 +3,7 @@
 #include <limits>  // For std::numeric_limits
 
 void printMainMenu() {
-    std::cout << "\n== TERMINAL RPG ==\n";
+    std::cout << "\n== VOIDROOT ==\n";
     std::cout << "1. Start New Game\n";
     std::cout << "2. Load Game\n";
     std::cout << "3. Exit\n";

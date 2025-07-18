@@ -4,10 +4,11 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <map>
 
 class Inventory {
 private:
-    std::vector<std::string> items;
+    std::map<std::string, int> items;
 
 public:
     void addItem(const std::string& item);
@@ -18,4 +19,4 @@ public:
     void loadFromFile(std::ifstream& ifs);
 };
 
-#endif
+#endif //INVENTORY_HPP

@@ -6,6 +6,10 @@
 #include <ctime>
 #include <algorithm>  // for std::find
 #include <iomanip>
+#include <thread>
+#include <chrono>
+#include <termios.h>
+#include <unistd.h>
 
 Game::Game() {
     player = nullptr;
@@ -18,6 +22,35 @@ Game::~Game() {
     delete inventory;
 }
 
+termios orig_term;
+
+void disableInputBuffering() {
+    tcgetattr(STDIN_FILENO, &orig_term);
+    struct termios newt;
+    tcgetattr(STDIN_FILENO, &newt);
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+void restoreInputBuffering() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &orig_term);
+}
+
+void loading(int seconds, const std::string& message) {
+    std::cout << message << " ";
+    const char spinner[] = {'|', '/', '-', '\\'};
+    int totalFrames = seconds * 10;
+    disableInputBuffering();
+
+    for (int i = 0; i < totalFrames; ++i) {
+        std::cout << "\b" << spinner[i % 4] << std::flush;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    
+    restoreInputBuffering();
+    std::cout << "\b \n"; //cleanup
+}
+
 void Game::startNewGame() {
     std::string name;
     std::cout << "Enter your name: ";
@@ -28,6 +61,8 @@ void Game::startNewGame() {
 
     visitedLocations.clear();
     visitedLocations.push_back(currentLocation);
+
+    loading(2, "Starting new game ");
 
     std::cout << "\nYou wake up in the " << currentLocation << ".\n";
 
@@ -45,7 +80,7 @@ bool Game::loadGame() {
         std::cout << "No save found.\n";
         return false;
     }
-
+    loading(2, "Loading game ");
     std::cout << "Game loaded! Welcome back, " << player->getName() << ".\n";
     return true;
 }
@@ -95,6 +130,7 @@ void Game::gameLoop() {
                 break;
 
             case 2: {
+                loading(10, "Wandering ");
                 std::string newLoc = World::getRandomLocation();
                 currentLocation = newLoc;
 
@@ -133,6 +169,8 @@ void Game::gameLoop() {
                     std::cout << "Invalid choice.\n";
                     break;
                 }
+                
+                loading(5, "Travelling ");
 
                 currentLocation = travelOptions[travelChoice - 1];
                 std::cout << "You travel to the " << currentLocation << ".\n";
@@ -140,6 +178,7 @@ void Game::gameLoop() {
             }
 
             case 4:
+                loading(5, "Searching for loot ");
                 inventory->addItem("Healing Potion");
                 std::cout << "You found a Healing Potion!\n";
                 break;
